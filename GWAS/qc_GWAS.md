@@ -1,6 +1,6 @@
-# Preparing GWAS vcf file for use in  analysis 
+# Quality control on the GWAS data
 
-## 1. Prepare candle file
+## 1. Prepare gwas file
 
 *  Drop off 23 genotype samples for whom we don’t have the transcriptomics data
 
@@ -80,7 +80,6 @@ Plot show the missing data is pretty evenly distributed across the individuals
 
 
 ## 5. HWE
-
 ```
 plink2 --vcf CANDLE_GWAS_mother_623.vcf.chr21.vcf.gz --hardy
 hwe_data %>% filter(V10<0.0001) %>% tally()
@@ -112,22 +111,24 @@ There is a trend for R2 values to decrease as the physical distance between SNPs
 
 ## 7. Filter data before do the PCA. 
 
-* Keep SNPs with no more than 10% missing alleles.
-* Remove low maf variants less than 0.01.
+* Keep SNPs with no more than 10% missing alleles.This option filters out variants (SNPs) with a genotyping rate less than 0.1, which means that SNPs with more than 10% missing genotypes will be removed from the dataset.
+* Remove low maf variants less than 0.01. 
 * Remove HWE p-value less than 1e-5.
 * Removes correlated pairs of SNPs so that the remaining SNPs are roughly independent.
-
 ```
 plink2 --vcf CANDLE_GWAS_mother_623.vcf.chr21.vcf.gz --hwe 1e-5 keep-fewhet --make-bed --out filter_hwe
-plink --bfile filter_hwe --maf 0.01 --indep-pairwise 50 5 0.2  --make-bed --out chr21-filter
+plink2 --bfile filter_hwe --geno 0.1 --make-bed --out filter_missing
+plink --bfile filter_missing --maf 0.01 --indep-pairwise 50 5 0.2  --make-bed --out chr21-filter
 plink2 --bfile chr21-filter --freq --out chr21-filter-freq
-plink2 --bfile chr21-filter --read-freq chr21-filter-freq.afreq --pca 
+plink2 --bfile chr21-filter --read-freq chr21-filter-freq.afreq --pca
 ```
 The ouput file: leave SNPs with MAF at least 1%, with no pairs remaining with r2>0.2. Snps with no more than 10% of missing alles and keep HWE p-value more than 1e-5.
-- 57 variants  (of tot) removed due to Hardy-Weinberg exact test
-- 677 variants removed due to minor allele threshold and linkage disequilibrium
+- 57 variants removed due to Hardy-Weinberg exact test
+- 229 variants removed due to missing alleles
+- Pruned 6805 variants
 
-PCA on 12213 variants and 623 people that pass filters and QC.
+For the PCA 12,213 (out of 12,939) markers are loaded.
+![PCA](https://github.com/Flavia95/CANDLE/assets/52487106/6819856c-f6e8-4b72-9f68-185cda8977ac)
 
 
 
