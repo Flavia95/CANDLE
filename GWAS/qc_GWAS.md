@@ -24,9 +24,9 @@ filtered_df <- x %>% filter(ALT_FREQS == 0 )
 ```
 ---
 
-# Analyses on Chr21:
+# Analyses on Chromosome 21:
 
-* Working only on chromosome 21
+* Working only on Chr21
 
 ```
 bcftools view -r 21 CANDLE_GWAS_mother_623.vcf.gz > CANDLE_GWAS_mother_623.vcf.chr21.vcf
