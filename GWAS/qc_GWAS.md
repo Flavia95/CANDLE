@@ -130,5 +130,34 @@ The ouput file: leave SNPs with MAF at least 1%, with no pairs remaining with r2
 For the PCA 12,213 (out of 12,939) markers are loaded.
 ![PCA](https://github.com/Flavia95/CANDLE/assets/52487106/6819856c-f6e8-4b72-9f68-185cda8977ac)
 
+## 7. Filter out only missing data at 5%.
+```
+plink2 --vcf CANDLE_GWAS_mother_623.vcf.chr21.vcf.gz --geno 0.05 --make-bed --out CANDLE_GWAS_mother_623_fil.chr21
+plink2 --bfile CANDLE_GWAS_mother_623_fil.chr21 --freq --out CANDLE_GWAS_mother_623_fil.chr21
+plink2 --bfile CANDLE_GWAS_mother_623_fil.chr21 --read-freq CANDLE_GWAS_mother_623_fil.chr21.afreq --pca --out CANDLE_GWAS_mother_623_fil.chr21
+```
+
+![PCA_chr21](https://github.com/Flavia95/CANDLE/assets/52487106/8cbc58f3-0362-4385-abf5-2045aa578eb7)
+
+## 8. Admixture only chr21
+* CV error for each K estimate
+The best K value for Admixture is typically the K value with the lowest cross-validation (CV) error.
+```
+CV error (K=1): 0.43284
+CV error (K=2): 0.38945
+CV error (K=3): 0.38902
+CV error (K=4): 0.38936
+CV error (K=5): 0.38921
+CV error (K=6): 0.38958
+CV error (K=7): 0.39024
+CV error (K=8): 0.39066
+CV error (K=9): 0.39136
+CV error (K=10): 0.39220
+```
+This shows that the lowest CV error is with K=3.
+![CV_error](https://github.com/Flavia95/CANDLE/assets/52487106/87d16859-74cf-4836-b8d6-ae116fc97d88)
+
+![admx_chr21](https://github.com/Flavia95/CANDLE/assets/52487106/83c99e11-4bc9-4564-86b2-d71b41cb733d)
+![admx_chr21_5_9](https://github.com/Flavia95/CANDLE/assets/52487106/5e56c896-0c62-40ba-90c2-ad74fda2a88c)
 
 
